@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using MakiniPrimarySchool.Data;
 using MakiniPrimarySchool.Models;
 
+//students
 namespace MakiniPrimarySchool.Pages.Students
 {
     /*public class IndexModel : PageModel

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakiniPrimarySchool", "MakiniPrimarySchool\MakiniPrimarySchool.csproj", "{2738C8D4-94B9-4988-B02C-28222529C736}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakiniPrimarySchool", "MakiniPrimarySchool\MakiniPrimarySchool.csproj", "{2738C8D4-94B9-4988-B02C-28222529C736}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
