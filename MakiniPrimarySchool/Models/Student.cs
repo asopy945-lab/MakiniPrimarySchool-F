@@ -23,7 +23,6 @@ namespace MakiniPrimarySchool.Models
         //this part is illegal//
         [Column("Stream")]
         [Display(Name = "Stream")]
-        [Required]
         public string Stream { get; set; }
         //illegal part ends here
 

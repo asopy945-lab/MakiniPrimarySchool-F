@@ -22,6 +22,21 @@ namespace MakiniPrimarySchool.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CourseInstructor", b =>
+                {
+                    b.Property<int>("CoursesCourseID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InstructorsID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CoursesCourseID", "InstructorsID");
+
+                    b.HasIndex("InstructorsID");
+
+                    b.ToTable("CourseInstructor");
+                });
+
             modelBuilder.Entity("MakiniPrimarySchool.Models.Course", b =>
                 {
                     b.Property<int>("CourseID")
@@ -30,12 +45,51 @@ namespace MakiniPrimarySchool.Migrations
                     b.Property<int>("Credits")
                         .HasColumnType("int");
 
+                    b.Property<int>("DepartmentID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("CourseID");
 
+                    b.HasIndex("DepartmentID");
+
                     b.ToTable("Course", (string)null);
+                });
+
+            modelBuilder.Entity("MakiniPrimarySchool.Models.Department", b =>
+                {
+                    b.Property<int>("DepartmentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartmentID"));
+
+                    b.Property<decimal>("Budget")
+                        .HasColumnType("money");
+
+                    b.Property<byte[]>("ConcurrencyToken")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int?>("InstructorID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("DepartmentID");
+
+                    b.HasIndex("InstructorID");
+
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("MakiniPrimarySchool.Models.Enrollment", b =>
@@ -61,7 +115,48 @@ namespace MakiniPrimarySchool.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("Enrollment", (string)null);
+                    b.ToTable("Enrollments");
+                });
+
+            modelBuilder.Entity("MakiniPrimarySchool.Models.Instructor", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("FirstMidName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("FirstName");
+
+                    b.Property<DateTime>("HireDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Instructor", (string)null);
+                });
+
+            modelBuilder.Entity("MakiniPrimarySchool.Models.OfficeAssignment", b =>
+                {
+                    b.Property<int>("InstructorID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("InstructorID");
+
+                    b.ToTable("OfficeAssignments");
                 });
 
             modelBuilder.Entity("MakiniPrimarySchool.Models.Student", b =>
@@ -87,13 +182,47 @@ namespace MakiniPrimarySchool.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Stream")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Stream");
 
                     b.HasKey("ID");
 
                     b.ToTable("Student", (string)null);
+                });
+
+            modelBuilder.Entity("CourseInstructor", b =>
+                {
+                    b.HasOne("MakiniPrimarySchool.Models.Course", null)
+                        .WithMany()
+                        .HasForeignKey("CoursesCourseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MakiniPrimarySchool.Models.Instructor", null)
+                        .WithMany()
+                        .HasForeignKey("InstructorsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MakiniPrimarySchool.Models.Course", b =>
+                {
+                    b.HasOne("MakiniPrimarySchool.Models.Department", "Department")
+                        .WithMany("Courses")
+                        .HasForeignKey("DepartmentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("MakiniPrimarySchool.Models.Department", b =>
+                {
+                    b.HasOne("MakiniPrimarySchool.Models.Instructor", "Administrator")
+                        .WithMany()
+                        .HasForeignKey("InstructorID");
+
+                    b.Navigation("Administrator");
                 });
 
             modelBuilder.Entity("MakiniPrimarySchool.Models.Enrollment", b =>
@@ -115,9 +244,30 @@ namespace MakiniPrimarySchool.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("MakiniPrimarySchool.Models.OfficeAssignment", b =>
+                {
+                    b.HasOne("MakiniPrimarySchool.Models.Instructor", "Instructor")
+                        .WithOne("OfficeAssignment")
+                        .HasForeignKey("MakiniPrimarySchool.Models.OfficeAssignment", "InstructorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Instructor");
+                });
+
             modelBuilder.Entity("MakiniPrimarySchool.Models.Course", b =>
                 {
                     b.Navigation("Enrollments");
+                });
+
+            modelBuilder.Entity("MakiniPrimarySchool.Models.Department", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("MakiniPrimarySchool.Models.Instructor", b =>
+                {
+                    b.Navigation("OfficeAssignment");
                 });
 
             modelBuilder.Entity("MakiniPrimarySchool.Models.Student", b =>
